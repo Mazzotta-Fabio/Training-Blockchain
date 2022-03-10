@@ -1,0 +1,7 @@
+solcjs <opzione: --bin --abi> <nomeFile>: comando invocato per compilare smart contract. Restituisce ABI o bytecode EVM a seconda delle opzioni.
+geth attach http://localhost:8545: comando usato per interagire con blockchain di ganache.
+ganache-cli: usato per avviare la blockchain di ethereum.
+
+//ogni volta prodotto lo smart contract bisogna minarlo su un account
+
+truffle: strumento che semplifica lo sviluppo di compilazione e deploy degli smart contract
