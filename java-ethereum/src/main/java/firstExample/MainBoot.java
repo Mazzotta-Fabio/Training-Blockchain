@@ -136,10 +136,11 @@ public class MainBoot {
 		    //1.carichiamo lo smart contract deployato sulla rete
 		    HelloWorld_sol_HelloWorld contract2=HelloWorld_sol_HelloWorld.load(cred4.getAddress(), web3, cred4, new DefaultGasProvider());
 		    //invochiamo i metodi: quelo che modifica la blockchain fa una transazione mentre quello view restituisce RemoteCall
-		    //TransactionReceipt tranRec=contract2.updateMessage("CIAO FABIO!!!!").send();
-		    //System.out.println("HASH TRANSAZIONE:" +tranRec.getTransactionHash());
-		    //System.out.println("HASH BLOCCO:" +tranRec.getBlockHash());
-		    String tranRec2=contract2.sayHello().sendAsync().get();
+		    TransactionReceipt tranRec=contract2.updateMessage("CIAO FABIO!!!!").send();
+		    
+		    System.out.println("HASH TRANSAZIONE:" +tranRec.getTransactionHash());
+		    System.out.println("HASH BLOCCO:" +tranRec.getBlockHash());
+		    String tranRec2=contract2.sayHello().send();
 		    System.out.println(tranRec2);
 		    /*
 		    // Print result
