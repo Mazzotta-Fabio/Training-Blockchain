@@ -8,3 +8,28 @@ truffle: strumento che semplifica lo sviluppo di compilazione e deploy degli sma
 
 //manuale su java
 https://kauri.io/#communities/Java%20Ethereum/manage-an-ethereum-account-with-java-and-web3j/
+
+
+//web3J: libreria usata per sviluppare dapp che usano java
+//installazione comando web3j per creare wrapper da usare per interagire con smart contract java
+We provide this functionality using the [Web3j CLI](http://docs.web3j.io/latest/command_line_tools/). This latter can be installed as follows:
+
+For Unix:
+
+```shell script
+curl -L get.web3j.io | sh && source ~/.web3j/source.sh
+```
+
+For Windows, in Powershell:
+
+```shell script
+Set-ExecutionPolicy Bypass -Scope Process -Force; iex ((New-Object System.Net.WebClient).DownloadString('https://raw.githubusercontent.com/web3j/web3j-installer/master/installer.ps1'))
+
+
+//generare wrapper 
+web3j generate solidity --abiFile HelloWorld_sol_HelloWorld.abi --binFile HelloWorld_sol_HelloWorld.bin --outputDir . --package it.fabio
+
+//generare wrapper con truffle
+$ web3j  truffle generate ./build/contracts/DocumentRegistry.json -o . -p me.gjeanmart.tutorials.javaethereum.wrapper
+
+//cambiare remoteFunctioncall con remoteCall

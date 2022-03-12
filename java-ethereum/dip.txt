@@ -1,0 +1,52 @@
+se si vuole fare con maven la generazione del wrapper dello smart contract bisogna aggiungere i due plugin tramite questo:
+<build>
+    <plugins>
+    <!--il primo plugin sarebbe web3j che si usa per la console. Per lanciarlo basta fare "Maven generate source" -->
+        <plugin>
+            <groupId>org.web3j</groupId>
+            <artifactId>web3j-maven-plugin</artifactId>
+            <version>4.2.0</version>
+            <executions>
+                <execution>
+                    <id>generate-sources-web3j</id>
+                    <phase>generate-sources</phase>
+                    <goals>
+                        <goal>generate-sources</goal>
+                    </goals>
+                    <configuration>
+                    <!-- cambiare package name (sarebbe il package da dare al wrapper) -->
+                        <packageName>me.gjeanmart.tutorials.javaethereum.contracts.generated</packageName>
+                        <!-- cambiare il sourceDestination (directory target dove posizionare il wrapper) -->
+                        <sourceDestination>${basedir}/target/generated-sources/contracts</sourceDestination>
+                        <soliditySourceFiles>
+                         <!-- cambiare il soliditySourceFile (directory dove prendere lo smart contract) -->
+                            <directory>${basedir}/src/main/resources</directory>
+                            <includes>
+                                <include>**/*.sol</include>
+                            </includes>
+                        </soliditySourceFiles>
+                    </configuration>
+                </execution>
+            </executions>
+        </plugin>
+       <!--il secondo plugin per inserire il wrapper in una directory --> 
+        <plugin>
+            <groupId>org.codehaus.mojo</groupId>
+            <artifactId>build-helper-maven-plugin</artifactId>
+            <executions>
+                <execution>
+                    <id>add-source</id>
+                    <phase>generate-sources</phase>
+                    <goals>
+                        <goal>add-source</goal>
+                    </goals>
+                    <configuration>
+                        <sources>
+                            <source>${basedir}/target/generated-sources/contracts</source>
+                        </sources>
+                    </configuration>
+                </execution>
+            </executions>
+        </plugin>
+    </plugins>
+</build>
