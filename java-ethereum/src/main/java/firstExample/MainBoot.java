@@ -1,13 +1,14 @@
 package firstExample;
 
 import java.io.File;
-import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.Optional;
-import org.web3j.contracts.token.ERC20Interface;
+
+import org.web3j.abi.EventEncoder;
+import org.web3j.abi.TypeEncoder;
+import org.web3j.abi.datatypes.Address;
 import org.web3j.crypto.Bip32ECKeyPair;
-import org.web3j.crypto.CipherException;
 import org.web3j.crypto.Credentials;
 import org.web3j.crypto.MnemonicUtils;
 import org.web3j.crypto.RawTransaction;
@@ -16,15 +17,14 @@ import org.web3j.crypto.WalletUtils;
 import org.web3j.protocol.Web3j;
 import org.web3j.protocol.http.HttpService;
 import org.web3j.tx.Transfer;
-import org.web3j.tx.gas.DefaultGasProvider;
 import org.web3j.utils.Convert;
 import org.web3j.utils.Convert.Unit;
 import org.web3j.utils.Numeric;
+import contract.HelloWorld_sol_HelloWorld;
 
-import it.fabio.HelloWorld_sol_HelloWorld;
-
+import org.web3j.protocol.core.DefaultBlockParameter;
 import org.web3j.protocol.core.DefaultBlockParameterName;
-import org.web3j.protocol.core.RemoteCall;
+import org.web3j.protocol.core.methods.request.EthFilter;
 import org.web3j.protocol.core.methods.response.EthBlockNumber;
 import org.web3j.protocol.core.methods.response.EthGasPrice;
 import org.web3j.protocol.core.methods.response.EthGetBalance;
@@ -53,13 +53,13 @@ public class MainBoot {
 		    EthGasPrice gasPrice = web3.ethGasPrice().send();
 		    
 		    //qui otteniamo gli ether disponibili 
-		    EthGetBalance balanceWei = web3.ethGetBalance("0xae3486D34Fa271d0F6F3dEc4433d23D5Dc298993", DefaultBlockParameterName.LATEST).send();
+		    EthGetBalance balanceWei = web3.ethGetBalance("0xBa7AE7996419Ec6aE9115Eef82E731fb898a57B8", DefaultBlockParameterName.LATEST).send();
 		    BigDecimal balanceRealWei=Convert.toWei(balanceWei.getBalance().toString(), Unit.WEI);
 		    //bilancio in ether
 		    BigDecimal balanceInEther = Convert.fromWei(balanceWei.getBalance().toString(), Unit.ETHER);
 		    
 		    //otteniamo il numero di transazioni fatte da un account (nonce)
-		    EthGetTransactionCount ethGetTransactionCount = web3.ethGetTransactionCount("0xae3486D34Fa271d0F6F3dEc4433d23D5Dc298993", DefaultBlockParameterName.LATEST).send();
+		    EthGetTransactionCount ethGetTransactionCount = web3.ethGetTransactionCount("0xBa7AE7996419Ec6aE9115Eef82E731fb898a57B8", DefaultBlockParameterName.LATEST).send();
 		    BigInteger nonce =  ethGetTransactionCount.getTransactionCount();
 		    
 		    // Print result
@@ -92,7 +92,8 @@ public class MainBoot {
 		    
 		    chiamaMetodiContratto(contract);
 		    
-		    HelloWorld_sol_HelloWorld.staticExtractEventParameters(null, null);
+		    callEvent(contract);
+		    
 		}
 		catch(Exception e) {
 			e.printStackTrace();
@@ -133,19 +134,18 @@ public class MainBoot {
 	    System.out.println("Balance: " + Convert.fromWei(web3.ethGetBalance(dest.getAddress(), DefaultBlockParameterName.LATEST).send().getBalance().toString(), Unit.ETHER));
 	}
 	
-	
+	//deploy su blockchain di uno smart contract da java
 	private static HelloWorld_sol_HelloWorld deployContract(Web3j web3)throws Exception {
-		//deploy su blockchain di uno smart contract da java
-	    //1.carichiamo l'account dove deployarlo
-	    Credentials cred4=Credentials.create("54589c347f07f5d186bb9f83f00b09d93b648d95196e97a4c987b4316d39d333");
+	    //1.carichiamo l'account per deployarlo
+	    Credentials cred4=Credentials.create("94b1a6cad45134a0d792d8a74151cc9eef4f603af89c9ad8757f93f6a70c148e");
 	    //2. deployiamo sull'account definito
-	    HelloWorld_sol_HelloWorld contract=HelloWorld_sol_HelloWorld.deploy(web3, cred4,new DefaultGasProvider()).send();
+	    HelloWorld_sol_HelloWorld contract=HelloWorld_sol_HelloWorld.deploy(web3, cred4,new DefinerGas()).send();
 	    System.out.println("Indirizzo associato allo smart contract: "+contract.getContractAddress());
 	    System.out.println("E' valido: "+contract.isValid());
 		//3.dopo abbiamo contract che è strettamente collegato con il contratto deployato (defaultGasProvider usa il prezzo del gas definito nel codice).
 	    //interagiamo con lo smart contract
 	    //1.carichiamo lo smart contract deployato sulla rete
-	    return HelloWorld_sol_HelloWorld.load(contract.getContractAddress(), web3, cred4, new DefaultGasProvider());
+	    return HelloWorld_sol_HelloWorld.load(contract.getContractAddress(), web3, cred4, new DefinerGas());
 	}
 	
 	
@@ -155,13 +155,14 @@ public class MainBoot {
 	    System.out.println("HASH TRANSAZIONE:" +tranRec.getTransactionHash());
 	    System.out.println("HASH BLOCCO:" +tranRec.getBlockHash());
 	    String tranRec2=contract.sayHello().send();
+	    contract.kill().send();
 	    System.out.println(tranRec2);
 	}
 	
 	private static Credentials caricaWallet() {
 	    //carichiamo un wallet tramite mnemonic phrase (che sarebbe una forma per descrivere la chiave privata)
 	    String password=null;//possiamo opzionalmente cifrare con una password
-	    String mnemonic="spoil either document defy water document point engage real champion town vague";
+	    String mnemonic="assault hazard explain column old tired will silk choose clever empower degree";
 	    //CREDENTIALS: oggetto usato per firmare e fare transazioni sulla blockchain Ethereum
 	    Credentials credentials=WalletUtils.loadBip39Credentials(password, mnemonic);
 	    
@@ -176,7 +177,7 @@ public class MainBoot {
 	    Credentials cred=Credentials.create(derivedKeyPair);
 	     
 	    //da una chiave privata
-	    String pk="84ac23ee28d0324ec731be146ee5eaf0e2e4a038b28d68e52786b1cce7812e27";
+	    String pk="76367b09e2ea0c33489f19146c6cbdd20a5257ce689bdf61cbfdca967621213f";
 	    Credentials cred3=Credentials.create(pk);
 	    
 	    System.out.println("Indirizzo tramite mnemonic phrase:"+credentials.getAddress());
@@ -195,5 +196,34 @@ public class MainBoot {
 	    System.out.println("Indirizzo del wallet creato: "+cred2.getAddress());
 	    System.out.println("walletName: "+walletName);
 	    return cred2;
+	}
+	
+	//chiamiamo eventi
+	private static void callEvent(HelloWorld_sol_HelloWorld contract) {
+		/*
+		 * gli eventi vengono chiamati con il pattern <event-name>EventFlowable. Questo metodo prende l'inizio e la fine del blocco.
+		 * con latest si dice a web3j di continuare glli eventi per i nuovi blocchi.
+		 * se si vuole richiedere uno specifico range di blocchi si può usare DefaultBlockParameter.valueOf(BigInteger.valueOf(...))
+		 * Restituisce un oggetto flowable che può essere sottoscritto per gestire gli eventi
+		 */
+		contract.depositEventFlowable(DefaultBlockParameterName.EARLIEST, DefaultBlockParameterName.LATEST).
+			subscribe(event->{String user=event.user;
+							  String message=event.message;
+							  BigInteger difficult=event.difficult;
+							  System.out.println("USER EVENT: "+user+" MESSAGE: "+message+" DIFFICOLTA': "+difficult);});
+		
+		
+		//qui facciamo un filtro per ascoltare gli eventi su un determinato indirizzo di contratto
+		EthFilter ethFilter=new EthFilter(DefaultBlockParameterName.EARLIEST,DefaultBlockParameterName.LATEST,contract.getContractAddress());
+		//questo filtro è definito sempre come keccak hash della firma dell'evento
+		ethFilter.addSingleTopic(EventEncoder.encode(contract.DEPOSIT_EVENT));
+		//usato per creare il parametro da matchare in maniera tale che sia conforme a come è definito nell'evento. 
+		//p.s usiamo type encoder per costruire opportunamente il parametro
+		ethFilter.addOptionalTopics("0x"+TypeEncoder.encode(new Address("A20f1c21c5550376eb2515761616c53e7be83be7")));
+		contract.depositEventFlowable(ethFilter).
+		subscribe(event->{String user=event.user;
+						  String message=event.message;
+						  BigInteger difficult=event.time;
+						  System.out.println("USER EVENT: "+user+" MESSAGE: "+message+" TIME': "+difficult);});
 	}
 }

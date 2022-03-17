@@ -1,12 +1,24 @@
 pragma solidity ^0.8.12;
 
-contract HelloWorld{
+contract HelloWorld {
 
     //struttura (simili a quello del C)
     struct Message{
         uint intero;
         uint nonIntero;
     }
+
+    /*
+    dichiariamo un evento( sono usati per comunicare alle applicazioni client cosa succede nella blockchain)
+    utili per avere conferma dell'esito delle transazioni
+	indexed: usato per filtrare dagli argomenti in base a determinati valori
+    */
+    event Deposit(
+        address indexed user,
+        string message,
+        uint256 time,
+        uint256 difficult
+    );
 
     string helloMessage;
     address payable public owner;
@@ -22,6 +34,8 @@ contract HelloWorld{
         memory: usato per salvare valori sulla blockchain
     */
     function updateMessage (string calldata _new_msg)  public{
+		//emetto l'evento
+        emit Deposit(msg.sender,"STO INVOCANDO IL METODO updateMessage",block.timestamp,block.difficulty);
         helloMessage=_new_msg;
     }
 

@@ -32,4 +32,3 @@ web3j generate solidity --abiFile HelloWorld_sol_HelloWorld.abi --binFile HelloW
 //generare wrapper con truffle
 $ web3j  truffle generate ./build/contracts/DocumentRegistry.json -o . -p me.gjeanmart.tutorials.javaethereum.wrapper
 
-//cambiare remoteFunctioncall con remoteCall
