@@ -1,4 +1,4 @@
-package firstExample;
+package contract;
 
 import java.math.BigInteger;
 

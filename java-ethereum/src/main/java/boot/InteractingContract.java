@@ -1,4 +1,4 @@
-package firstExample;
+package boot;
 
 import java.io.File;
 import java.math.BigDecimal;
@@ -20,6 +20,8 @@ import org.web3j.tx.Transfer;
 import org.web3j.utils.Convert;
 import org.web3j.utils.Convert.Unit;
 import org.web3j.utils.Numeric;
+
+import contract.DefinerGas;
 import contract.HelloWorld_sol_HelloWorld;
 
 import org.web3j.protocol.core.DefaultBlockParameter;
@@ -34,7 +36,7 @@ import org.web3j.protocol.core.methods.response.EthSendTransaction;
 import org.web3j.protocol.core.methods.response.TransactionReceipt;
 import org.web3j.protocol.core.methods.response.Web3ClientVersion;
 
-public class MainBoot {
+public class InteractingContract {
 
 	public static void main(String[] args) {
 		System.out.println("Connecting to Ethereum ...");
