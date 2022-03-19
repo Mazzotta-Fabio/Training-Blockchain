@@ -34,9 +34,10 @@ contract HelloWorld {
         memory: usato per salvare valori sulla blockchain
     */
     function updateMessage (string calldata _new_msg)  public{
+		helloMessage=_new_msg;
 		//emetto l'evento
         emit Deposit(msg.sender,"STO INVOCANDO IL METODO updateMessage",block.timestamp,block.difficulty);
-        helloMessage=_new_msg;
+        
     }
 
     /*

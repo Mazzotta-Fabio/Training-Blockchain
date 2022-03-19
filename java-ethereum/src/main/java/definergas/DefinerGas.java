@@ -1,4 +1,4 @@
-package contract;
+package definergas;
 
 import java.math.BigInteger;
 
