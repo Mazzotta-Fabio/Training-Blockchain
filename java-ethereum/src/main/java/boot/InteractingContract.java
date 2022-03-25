@@ -155,7 +155,7 @@ public class InteractingContract {
 	    System.out.println("HASH TRANSAZIONE:" +tranRec.getTransactionHash());
 	    System.out.println("HASH BLOCCO:" +tranRec.getBlockHash());
 	    String tranRec2=contract.sayHello().send();
-	    contract.kill().send();
+	    //contract.kill().send();
 	    System.out.println(tranRec2);
 	}
 	

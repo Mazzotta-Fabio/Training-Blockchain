@@ -1,5 +1,6 @@
 package boot;
 
+
 import org.web3j.protocol.Web3j;
 import org.web3j.protocol.core.DefaultBlockParameterName;
 import org.web3j.protocol.core.methods.response.EthBlock.Block;
@@ -19,7 +20,7 @@ public class InteractingDb {
 			System.out.println("HASH BLOCCO: "+blocco.getHash());
 			System.out.println("HASH RADICE STATI: "+blocco.getStateRoot());
 			System.out.println("HASH TRANSACTION ROOT: "+blocco.getTransactionsRoot());
-			System.out.println("HASH RECEIPT ROOT: "+blocco.getReceiptsRoot());
+			System.out.println("HASH RECEIPT ROOT: "+blocco.getReceiptsRoot());	
 			
 		}
 		catch(Exception e) {
