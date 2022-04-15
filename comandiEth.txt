@@ -27,7 +27,7 @@ Set-ExecutionPolicy Bypass -Scope Process -Force; iex ((New-Object System.Net.We
 
 
 //generare wrapper 
-web3j generate solidity --abiFile HelloWorld_sol_HelloWorld.abi --binFile HelloWorld_sol_HelloWorld.bin --outputDir . --package it.fabio
+web3j generate solidity --abiFile ContrattoVulnerabile_sol_ContrattoVulnerabile.abi  --binFile ContrattoVulnerabile_sol_ContrattoVulnerabile.bin --outputDir . --package it.fabio
 
 //generare wrapper con truffle
 $ web3j  truffle generate ./build/contracts/DocumentRegistry.json -o . -p me.gjeanmart.tutorials.javaethereum.wrapper
