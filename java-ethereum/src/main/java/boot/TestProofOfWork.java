@@ -16,9 +16,9 @@ public class TestProofOfWork {
 		}
 		long secondsAfter=System.currentTimeMillis();
 		long durata=secondsAfter-secondsBefore;
-		
 		long minutes=(durata/1000)/60;
-		long seconds=TimeUnit.SECONDS.toSeconds(durata);
-		System.out.println("Nonce: "+nonce+"\nTempo Impiegato in secondi: "+seconds+"\nTempo in minuti: "+minutes);
+		long seconds = (durata / 1000) % 60;
+		//long seconds=TimeUnit.SECONDS.toSeconds(durata);
+		System.out.println("Nonce: "+nonce+"\nDurata esecuzione: "+minutes+" minuti e "+seconds+" secondi");
 	}
 }
