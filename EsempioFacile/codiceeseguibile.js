@@ -11,14 +11,14 @@ const web3 = new Web3("http://127.0.0.1:7545");
 
 //5. creiamo l'istanza per usare il contratto 
 const contract= new web3.eth.Contract(contractAbi.abi,contractAddress);
-console.log(contract);
+//console.log(contract);
 
 var value=2;
 const transaction=contract.methods.set(value).send({from: "0x75291853e9Cd0ab85a66bc9974FDa214dAF77dC6"});
-console.log("transazione n°"+transaction);
+console.log("transazione n°"+`${transaction}`);
 
 const valore=contract.methods.get().call();//send({from: "0x75291853e9Cd0ab85a66bc9974FDa214dAF77dC6"});
-console.log("Valore presente nel contratto"+valore);
+console.log("Valore presente nel contratto: "+`${value}`);
 
 /*
 $(document).ready(function(){
