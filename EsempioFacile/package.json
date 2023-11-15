@@ -1,0 +1,6 @@
+{
+	"type":"commonjs",
+  "dependencies": {
+    "web3": "^4.2.2"
+  }
+}
