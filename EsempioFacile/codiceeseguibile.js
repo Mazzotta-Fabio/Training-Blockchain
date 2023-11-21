@@ -3,7 +3,7 @@ const {Web3} = require('web3');
 
 
 //2. definiamo l'indirizzo dello smart contract
-const contractAddress="0x2DeD24bC24AB1556d62eFefF48Be103B589f510C";
+const contractAddress="0x78095695CDde834012bD059377ea0AaAB314Ee90";
 
 //3. importiamo l'abi (per nodeJs)
 const contractAbi=require('./build/contracts/SimpleStorage.json');
@@ -31,5 +31,29 @@ async function testSmartContractGetValue(){
 	console.log("Valore sullo smartContract: "+parseInt(valore));
 }
 
+async function sendEther(){
+	
+	const result= await web3.eth.sendTransaction({
+		from: '0xE9025196A1f31946DDF5C06F365381435FEc0eC6',
+		to: contractAddress,
+		value: '10000000000000000000'
+	});
+	console.log("hash transazione semplice:"+result.transactionHash)
+	
+	const signHash=await web3.eth.accounts.signTransaction({
+		from:'0xE8cbE38f7E31D41Fc8776245D1A730CA422F761F',
+		to:'0x7fcaE97C8ca82c12c38302FA716B35F5Af6c1700',
+		value:'10000000000000000000',
+		gas:'22000',
+		gasPrice:'20000000000'
+	},"0xa790d41fcb12c66f4ce050d144fb806c9d9a19c53da38a09ec005372f627f97d");
+	
+	console.log("Firma transazione di ether:"+signHash.messageHash);
+	
+	const transaction=await contract.methods.depositTransfer(contractAddress,4).send({from:			  "0x75291853e9Cd0ab85a66bc9974FDa214dAF77dC6"});
+	console.log("hash trasferimento ad altro indirizzo da smartContract:"+transaction.transactionHash);
+	
+}
 testSmartContractSetValue();
 setTimeout(testSmartContractGetValue,2000);
+setTimeout(sendEther,5000);
